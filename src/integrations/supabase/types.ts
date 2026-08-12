@@ -14,6 +14,231 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          org_id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: string
+          org_id: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          org_id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_investigations: {
+        Row: {
+          alert_id: string | null
+          attack_narrative: string | null
+          confidence: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          incident_id: string | null
+          mitre: Json
+          model: string | null
+          org_id: string
+          recommendations: Json
+          severity_assessment: string | null
+          summary: string
+        }
+        Insert: {
+          alert_id?: string | null
+          attack_narrative?: string | null
+          confidence?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          incident_id?: string | null
+          mitre?: Json
+          model?: string | null
+          org_id: string
+          recommendations?: Json
+          severity_assessment?: string | null
+          summary: string
+        }
+        Update: {
+          alert_id?: string | null
+          attack_narrative?: string | null
+          confidence?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          incident_id?: string | null
+          mitre?: Json
+          model?: string | null
+          org_id?: string
+          recommendations?: Json
+          severity_assessment?: string | null
+          summary?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_investigations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          meta: Json
+          org_id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          org_id: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          meta?: Json
+          org_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_messages_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage_log: {
+        Row: {
+          created_at: string
+          feature: string
+          id: string
+          input_tokens: number
+          model: string
+          org_id: string
+          output_tokens: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          feature: string
+          id?: string
+          input_tokens?: number
+          model?: string
+          org_id: string
+          output_tokens?: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          feature?: string
+          id?: string
+          input_tokens?: number
+          model?: string
+          org_id?: string
+          output_tokens?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_usage_log_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alert_mitre_map: {
+        Row: {
+          alert_id: string
+          confidence: number
+          created_at: string
+          id: string
+          org_id: string
+          source: string
+          technique_id: string
+        }
+        Insert: {
+          alert_id: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          org_id: string
+          source?: string
+          technique_id: string
+        }
+        Update: {
+          alert_id?: string
+          confidence?: number
+          created_at?: string
+          id?: string
+          org_id?: string
+          source?: string
+          technique_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_mitre_map_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alert_mitre_map_technique_id_fkey"
+            columns: ["technique_id"]
+            isOneToOne: false
+            referencedRelation: "mitre_techniques"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       alerts: {
         Row: {
           assigned_to: string | null
@@ -239,6 +464,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "email_outbox_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entity_risk_scores: {
+        Row: {
+          alert_count: number
+          computed_at: string
+          entity_type: string
+          entity_value: string
+          event_count: number
+          factors: Json
+          id: string
+          last_seen: string | null
+          level: string
+          org_id: string
+          score: number
+        }
+        Insert: {
+          alert_count?: number
+          computed_at?: string
+          entity_type: string
+          entity_value: string
+          event_count?: number
+          factors?: Json
+          id?: string
+          last_seen?: string | null
+          level?: string
+          org_id: string
+          score?: number
+        }
+        Update: {
+          alert_count?: number
+          computed_at?: string
+          entity_type?: string
+          entity_value?: string
+          event_count?: number
+          factors?: Json
+          id?: string
+          last_seen?: string | null
+          level?: string
+          org_id?: string
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entity_risk_scores_org_id_fkey"
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -587,10 +862,14 @@ export type Database = {
       licenses: {
         Row: {
           created_at: string
+          customer_name: string | null
           eps_limit: number
           expires_at: string
+          grace_days: number
           id: string
           issued_at: string
+          key_id: string | null
+          last_validated_at: string | null
           license_key: string
           max_sources: number
           max_users: number
@@ -599,14 +878,20 @@ export type Database = {
           plan: Database["public"]["Enums"]["license_plan"]
           retention_days: number
           signature: string
+          signature_alg: string
           status: Database["public"]["Enums"]["license_status"]
+          uploaded_by: string | null
         }
         Insert: {
           created_at?: string
+          customer_name?: string | null
           eps_limit?: number
           expires_at: string
+          grace_days?: number
           id?: string
           issued_at?: string
+          key_id?: string | null
+          last_validated_at?: string | null
           license_key: string
           max_sources?: number
           max_users?: number
@@ -615,14 +900,20 @@ export type Database = {
           plan: Database["public"]["Enums"]["license_plan"]
           retention_days?: number
           signature: string
+          signature_alg?: string
           status?: Database["public"]["Enums"]["license_status"]
+          uploaded_by?: string | null
         }
         Update: {
           created_at?: string
+          customer_name?: string | null
           eps_limit?: number
           expires_at?: string
+          grace_days?: number
           id?: string
           issued_at?: string
+          key_id?: string | null
+          last_validated_at?: string | null
           license_key?: string
           max_sources?: number
           max_users?: number
@@ -631,7 +922,9 @@ export type Database = {
           plan?: Database["public"]["Enums"]["license_plan"]
           retention_days?: number
           signature?: string
+          signature_alg?: string
           status?: Database["public"]["Enums"]["license_status"]
+          uploaded_by?: string | null
         }
         Relationships: [
           {
@@ -720,6 +1013,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mitre_techniques: {
+        Row: {
+          description: string
+          id: string
+          name: string
+          tactic: string
+          tactic_id: string
+          url: string
+        }
+        Insert: {
+          description?: string
+          id: string
+          name: string
+          tactic: string
+          tactic_id: string
+          url?: string
+        }
+        Update: {
+          description?: string
+          id?: string
+          name?: string
+          tactic?: string
+          tactic_id?: string
+          url?: string
+        }
+        Relationships: []
       }
       organizations: {
         Row: {
@@ -951,6 +1271,53 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "permissions"
             referencedColumns: ["key"]
+          },
+        ]
+      }
+      saved_hunts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string
+          hypothesis: string
+          id: string
+          name: string
+          org_id: string
+          query: Json
+          technique_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          hypothesis?: string
+          id?: string
+          name: string
+          org_id: string
+          query?: Json
+          technique_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          hypothesis?: string
+          id?: string
+          name?: string
+          org_id?: string
+          query?: Json
+          technique_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_hunts_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
           },
         ]
       }
