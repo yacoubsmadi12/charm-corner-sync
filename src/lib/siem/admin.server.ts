@@ -11,9 +11,10 @@ import {
   requireSuperAdmin,
   scopeOrg,
   sha256Hex,
-  signPayload,
+  signLicense,
   validatePassword,
-  verifyPayload,
+  verifyLicenseSignature,
+  entitlements,
   type AppRole,
 } from "./core.server";
 
@@ -171,8 +172,11 @@ export async function generateLicense(
     issued_at: new Date().toISOString(),
     expires_at: new Date(input.expiresAt).toISOString(),
     features: input.features,
+    customer_name: org.name,
+    contact_email: org.contact_email,
+    license_version: 2,
   };
-  const signature = await signPayload(payload);
+  const { signature, alg, keyId } = await signLicense(payload);
 
   const { data: license, error } = await supabaseAdmin
     .from("licenses")
@@ -187,6 +191,9 @@ export async function generateLicense(
       max_sources: input.maxSources,
       expires_at: payload.expires_at,
       signature,
+      signature_alg: alg,
+      key_id: keyId,
+      customer_name: org.name,
       payload: payload as never,
     })
     .select()
@@ -219,11 +226,18 @@ export async function generateLicense(
     details: { plan: input.plan },
   });
 
-  return { license, file: buildLicenseFile(payload, signature) };
+  return { license, file: buildLicenseFile(payload, signature, alg, keyId) };
 }
 
-function buildLicenseFile(payload: unknown, signature: string) {
-  const body = btoa(JSON.stringify({ payload, signature }, null, 0));
+function buildLicenseFile(
+  payload: unknown,
+  signature: string,
+  alg?: string | null,
+  keyId?: string | null,
+) {
+  const body = btoa(
+    JSON.stringify({ payload, signature, alg: alg ?? null, key_id: keyId ?? null }, null, 0),
+  );
   return `-----BEGIN DIRAMN LICENSE-----\n${(body.match(/.{1,64}/g) ?? []).join("\n")}\n-----END DIRAMN LICENSE-----\n`;
 }
 
@@ -237,7 +251,14 @@ export async function downloadLicense(userId: string, licenseId: string) {
   if (!license) throw new Error("License not found");
   if (!actor.isSuperAdmin && license.org_id !== actor.orgId)
     throw new Error("Forbidden: cross-tenant access denied");
-  return { file: buildLicenseFile(license.payload, license.signature) };
+  return {
+    file: buildLicenseFile(
+      license.payload,
+      license.signature,
+      (license as Record<string, unknown>)["signature_alg"] as string | null,
+      (license as Record<string, unknown>)["key_id"] as string | null,
+    ),
+  };
 }
 
 export async function setLicenseStatus(
@@ -274,7 +295,12 @@ export async function uploadLicense(userId: string, fileContent: string) {
   const b64 = fileContent
     .replace(/-----[A-Z ]+-----/g, "")
     .replace(/\s+/g, "");
-  let parsed: { payload: Record<string, unknown>; signature: string };
+  let parsed: {
+    payload: Record<string, unknown>;
+    signature: string;
+    alg?: string | null;
+    key_id?: string | null;
+  };
   try {
     parsed = JSON.parse(atob(b64));
   } catch {
@@ -283,7 +309,11 @@ export async function uploadLicense(userId: string, fileContent: string) {
   if (!parsed?.payload || !parsed?.signature)
     throw new Error("Invalid license file");
 
-  const valid = await verifyPayload(parsed.payload, parsed.signature);
+  const { valid, alg } = await verifyLicenseSignature(
+    parsed.payload,
+    parsed.signature,
+    parsed.alg ?? null,
+  );
   if (!valid) {
     await audit({
       orgId,
@@ -305,6 +335,8 @@ export async function uploadLicense(userId: string, fileContent: string) {
     max_users: number;
     max_sources: number;
     expires_at: string;
+    features?: string[];
+    customer_name?: string;
   };
   if (p.org_id !== orgId)
     throw new Error("This license was issued to a different organization");
@@ -325,6 +357,11 @@ export async function uploadLicense(userId: string, fileContent: string) {
         max_sources: Number(p.max_sources),
         expires_at: p.expires_at,
         signature: parsed.signature,
+        signature_alg: alg ?? "HMAC-SHA256",
+        key_id: parsed.key_id ?? null,
+        customer_name: p.customer_name ?? null,
+        uploaded_by: actor.id,
+        last_validated_at: new Date().toISOString(),
         payload: parsed.payload as never,
       },
       { onConflict: "license_key" },
@@ -332,6 +369,17 @@ export async function uploadLicense(userId: string, fileContent: string) {
     .select()
     .single();
   if (error) throw new Error(error.message);
+
+  await supabaseAdmin
+    .from("license_features")
+    .delete()
+    .eq("license_id", license.id);
+  const uploadedFeatures = Array.isArray(p.features) ? p.features : [];
+  if (uploadedFeatures.length) {
+    await supabaseAdmin.from("license_features").insert(
+      uploadedFeatures.map((f) => ({ license_id: license.id, feature_key: f })),
+    );
+  }
 
   await supabaseAdmin
     .from("organizations")
@@ -849,10 +897,13 @@ export async function currentContext(userId: string) {
     .from("role_permissions")
     .select("permission, role")
     .in("role", actor.roles.length ? actor.roles : ["viewer"]);
+  const ent = await entitlements(actor.orgId);
   return {
     actor,
     org,
     license,
+    entitlements: ent,
+    features: ent.features,
     permissions: [...new Set((perms ?? []).map((p) => p.permission))],
   };
 }
