@@ -356,3 +356,161 @@ export function planDefaults(plan: string) {
       };
   }
 }
+
+/* ---------------------- entitlements / feature gating ---------------------- */
+
+export const FEATURE_KEYS = [
+  "correlation",
+  "threat_intel",
+  "compliance",
+  "ueba",
+  "soar",
+  "ai_analytics",
+  "ai_investigation",
+  "ai_chat",
+  "threat_hunting",
+  "mitre_mapping",
+  "risk_scoring",
+] as const;
+export type FeatureKey = (typeof FEATURE_KEYS)[number];
+
+export const FEATURE_LABELS: Record<string, string> = {
+  correlation: "Correlation engine",
+  threat_intel: "Threat intelligence",
+  compliance: "Compliance reporting",
+  ueba: "User behaviour analytics",
+  soar: "Response automation",
+  ai_analytics: "AI analytics",
+  ai_investigation: "AI investigation",
+  ai_chat: "AI security assistant",
+  threat_hunting: "Threat hunting",
+  mitre_mapping: "MITRE ATT&CK mapping",
+  risk_scoring: "Risk scoring",
+};
+
+export type Entitlements = {
+  plan: string;
+  status: string;
+  valid: boolean;
+  reason: string | null;
+  features: string[];
+  epsLimit: number;
+  retentionDays: number;
+  maxUsers: number;
+  maxSources: number;
+  expiresAt: string | null;
+  daysRemaining: number | null;
+  inGrace: boolean;
+  signatureAlg: string | null;
+};
+
+const UNLICENSED: Entitlements = {
+  plan: "UNLICENSED",
+  status: "none",
+  valid: false,
+  reason: "no_license",
+  features: [],
+  epsLimit: 0,
+  retentionDays: 7,
+  maxUsers: 1,
+  maxSources: 1,
+  expiresAt: null,
+  daysRemaining: null,
+  inGrace: false,
+  signatureAlg: null,
+};
+
+/**
+ * Resolves the server-side truth for what an organization may do. Entitlements
+ * come from the stored signed license only — never from client input and never
+ * from the plan column alone. The signature is re-verified on every read.
+ */
+export async function entitlements(
+  orgId: string | null,
+): Promise<Entitlements> {
+  if (!orgId) return UNLICENSED;
+  const { data: license } = await supabaseAdmin
+    .from("licenses")
+    .select("*")
+    .eq("org_id", orgId)
+    .in("status", ["active", "expired"])
+    .order("expires_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!license) return UNLICENSED;
+
+  const lic = license as Record<string, unknown>;
+  const { valid, alg } = await verifyLicenseSignature(
+    lic["payload"],
+    String(lic["signature"] ?? ""),
+    (lic["signature_alg"] as string | null) ?? null,
+  );
+
+  const expiresAt = String(lic["expires_at"]);
+  const graceDays = Number(lic["grace_days"] ?? 0);
+  const msLeft = new Date(expiresAt).getTime() - Date.now();
+  const daysRemaining = Math.ceil(msLeft / 86400000);
+  const expired = msLeft <= 0;
+  const inGrace = expired && msLeft > -graceDays * 86400000;
+
+  const { data: featureRows } = await supabaseAdmin
+    .from("license_features")
+    .select("feature_key")
+    .eq("license_id", String(lic["id"]));
+  const stored = (featureRows ?? []).map((f) => f.feature_key);
+  const payloadFeatures = Array.isArray(
+    (lic["payload"] as { features?: unknown } | null)?.features,
+  )
+    ? ((lic["payload"] as { features: string[] }).features ?? [])
+    : [];
+  const features = [...new Set([...stored, ...payloadFeatures])];
+
+  const status = String(lic["status"]);
+  const usable =
+    valid && status === "active" && (!expired || inGrace);
+  const reason = !valid
+    ? "invalid_signature"
+    : status !== "active"
+      ? status
+      : expired && !inGrace
+        ? "expired"
+        : null;
+
+  return {
+    plan: String(lic["plan"]),
+    status,
+    valid: usable,
+    reason,
+    features: usable ? features : [],
+    epsLimit: Number(lic["eps_limit"] ?? 0),
+    retentionDays: Number(lic["retention_days"] ?? 7),
+    maxUsers: Number(lic["max_users"] ?? 1),
+    maxSources: Number(lic["max_sources"] ?? 1),
+    expiresAt,
+    daysRemaining,
+    inGrace,
+    signatureAlg: alg ?? ((lic["signature_alg"] as string) ?? null),
+  };
+}
+
+/**
+ * Server-side feature gate. UI hiding is cosmetic; this is the enforcement
+ * point every gated server function must pass through.
+ */
+export async function requireFeature(
+  actor: Actor,
+  feature: FeatureKey,
+): Promise<Entitlements> {
+  const ent = await entitlements(actor.orgId);
+  if (!ent.valid)
+    throw new Error(
+      ent.reason === "no_license"
+        ? "No active license. Upload a signed license file to enable this feature."
+        : `License is not usable (${ent.reason}). Contact your vendor.`,
+    );
+  if (!ent.features.includes(feature))
+    throw new Error(
+      `Your ${ent.plan} license does not include ${FEATURE_LABELS[feature] ?? feature}.`,
+    );
+  return ent;
+}
