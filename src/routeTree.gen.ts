@@ -30,10 +30,6 @@ import { Route as VendorGeneratorRouteImport } from './routes/vendor/generator'
 import { Route as VendorHealthRouteImport } from './routes/vendor/health'
 import { Route as VendorLicensesRouteImport } from './routes/vendor/licenses'
 import { Route as VendorOrganizationsRouteImport } from './routes/vendor/organizations'
-import { Route as ApiPublicLogsIngestRouteImport } from './routes/api/public/logs/ingest'
-import { Route as ApiPublicLogsSnmpRouteImport } from './routes/api/public/logs/snmp'
-import { Route as ApiPublicLogsSyslogRouteImport } from './routes/api/public/logs/syslog'
-import { Route as ApiPublicLogsWebhookRouteImport } from './routes/api/public/logs/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -140,26 +136,6 @@ const VendorOrganizationsRoute = VendorOrganizationsRouteImport.update({
   path: '/organizations',
   getParentRoute: () => VendorRouteRoute,
 } as any)
-const ApiPublicLogsIngestRoute = ApiPublicLogsIngestRouteImport.update({
-  id: '/api/public/logs/ingest',
-  path: '/api/public/logs/ingest',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicLogsSnmpRoute = ApiPublicLogsSnmpRouteImport.update({
-  id: '/api/public/logs/snmp',
-  path: '/api/public/logs/snmp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicLogsSyslogRoute = ApiPublicLogsSyslogRouteImport.update({
-  id: '/api/public/logs/syslog',
-  path: '/api/public/logs/syslog',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicLogsWebhookRoute = ApiPublicLogsWebhookRouteImport.update({
-  id: '/api/public/logs/webhook',
-  path: '/api/public/logs/webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -183,10 +159,6 @@ export interface FileRoutesByFullPath {
   '/vendor/organizations': typeof VendorOrganizationsRoute
   '/console/': typeof ConsoleIndexRoute
   '/vendor/': typeof VendorIndexRoute
-  '/api/public/logs/ingest': typeof ApiPublicLogsIngestRoute
-  '/api/public/logs/snmp': typeof ApiPublicLogsSnmpRoute
-  '/api/public/logs/syslog': typeof ApiPublicLogsSyslogRoute
-  '/api/public/logs/webhook': typeof ApiPublicLogsWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -208,10 +180,6 @@ export interface FileRoutesByTo {
   '/vendor/organizations': typeof VendorOrganizationsRoute
   '/console': typeof ConsoleIndexRoute
   '/vendor': typeof VendorIndexRoute
-  '/api/public/logs/ingest': typeof ApiPublicLogsIngestRoute
-  '/api/public/logs/snmp': typeof ApiPublicLogsSnmpRoute
-  '/api/public/logs/syslog': typeof ApiPublicLogsSyslogRoute
-  '/api/public/logs/webhook': typeof ApiPublicLogsWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -236,10 +204,6 @@ export interface FileRoutesById {
   '/vendor/organizations': typeof VendorOrganizationsRoute
   '/console/': typeof ConsoleIndexRoute
   '/vendor/': typeof VendorIndexRoute
-  '/api/public/logs/ingest': typeof ApiPublicLogsIngestRoute
-  '/api/public/logs/snmp': typeof ApiPublicLogsSnmpRoute
-  '/api/public/logs/syslog': typeof ApiPublicLogsSyslogRoute
-  '/api/public/logs/webhook': typeof ApiPublicLogsWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -265,10 +229,6 @@ export interface FileRouteTypes {
     | '/vendor/organizations'
     | '/console/'
     | '/vendor/'
-    | '/api/public/logs/ingest'
-    | '/api/public/logs/snmp'
-    | '/api/public/logs/syslog'
-    | '/api/public/logs/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -290,10 +250,6 @@ export interface FileRouteTypes {
     | '/vendor/organizations'
     | '/console'
     | '/vendor'
-    | '/api/public/logs/ingest'
-    | '/api/public/logs/snmp'
-    | '/api/public/logs/syslog'
-    | '/api/public/logs/webhook'
   id:
     | '__root__'
     | '/'
@@ -317,10 +273,6 @@ export interface FileRouteTypes {
     | '/vendor/organizations'
     | '/console/'
     | '/vendor/'
-    | '/api/public/logs/ingest'
-    | '/api/public/logs/snmp'
-    | '/api/public/logs/syslog'
-    | '/api/public/logs/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -328,10 +280,6 @@ export interface RootRouteChildren {
   ConsoleRouteRoute: typeof ConsoleRouteRouteWithChildren
   VendorRouteRoute: typeof VendorRouteRouteWithChildren
   RedirectRoute: typeof RedirectRoute
-  ApiPublicLogsIngestRoute: typeof ApiPublicLogsIngestRoute
-  ApiPublicLogsSnmpRoute: typeof ApiPublicLogsSnmpRoute
-  ApiPublicLogsSyslogRoute: typeof ApiPublicLogsSyslogRoute
-  ApiPublicLogsWebhookRoute: typeof ApiPublicLogsWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -483,34 +431,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorOrganizationsRouteImport
       parentRoute: typeof VendorRouteRoute
     }
-    '/api/public/logs/ingest': {
-      id: '/api/public/logs/ingest'
-      path: '/api/public/logs/ingest'
-      fullPath: '/api/public/logs/ingest'
-      preLoaderRoute: typeof ApiPublicLogsIngestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/logs/snmp': {
-      id: '/api/public/logs/snmp'
-      path: '/api/public/logs/snmp'
-      fullPath: '/api/public/logs/snmp'
-      preLoaderRoute: typeof ApiPublicLogsSnmpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/logs/syslog': {
-      id: '/api/public/logs/syslog'
-      path: '/api/public/logs/syslog'
-      fullPath: '/api/public/logs/syslog'
-      preLoaderRoute: typeof ApiPublicLogsSyslogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/logs/webhook': {
-      id: '/api/public/logs/webhook'
-      path: '/api/public/logs/webhook'
-      fullPath: '/api/public/logs/webhook'
-      preLoaderRoute: typeof ApiPublicLogsWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -573,11 +493,17 @@ const rootRouteChildren: RootRouteChildren = {
   ConsoleRouteRoute: ConsoleRouteRouteWithChildren,
   VendorRouteRoute: VendorRouteRouteWithChildren,
   RedirectRoute: RedirectRoute,
-  ApiPublicLogsIngestRoute: ApiPublicLogsIngestRoute,
-  ApiPublicLogsSnmpRoute: ApiPublicLogsSnmpRoute,
-  ApiPublicLogsSyslogRoute: ApiPublicLogsSyslogRoute,
-  ApiPublicLogsWebhookRoute: ApiPublicLogsWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
