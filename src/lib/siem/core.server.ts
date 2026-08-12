@@ -350,7 +350,15 @@ export function planDefaults(plan: string) {
         retention: 180,
         users: 100,
         sources: 250,
-        features: ["correlation", "threat_intel", "compliance"],
+        features: [
+          "correlation",
+          "threat_intel",
+          "compliance",
+          "threat_hunting",
+          "mitre_mapping",
+          "risk_scoring",
+        ],
+
       };
     default:
       return {
