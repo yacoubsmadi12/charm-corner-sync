@@ -44,6 +44,7 @@ function LicensePage() {
   });
 
   const license = ctx?.license;
+  const ent = ctx?.entitlements;
 
   return (
     <>
@@ -53,7 +54,7 @@ function LicensePage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Plan" value={license?.plan ?? "Unlicensed"} />
+        <StatCard label="Plan" value={ent?.plan ?? "Unlicensed"} />
         <StatCard label="EPS limit" value={license?.eps_limit ?? "—"} />
         <StatCard label="Max users" value={license?.max_users ?? "—"} />
         <StatCard
@@ -81,6 +82,17 @@ function LicensePage() {
                 label="Issued"
                 value={new Date(license.issued_at).toLocaleDateString()}
               />
+              <Row label="Signature" value={ent?.signatureAlg ?? "unknown"} />
+              <Row
+                label="Validity"
+                value={
+                  ent?.valid
+                    ? ent.inGrace
+                      ? `in grace period (${ent.daysRemaining} days)`
+                      : `valid (${ent.daysRemaining} days left)`
+                    : `not usable (${ent?.reason ?? "unknown"})`
+                }
+              />
             </dl>
           ) : (
             <p className="text-sm text-muted-foreground">
@@ -90,6 +102,27 @@ function LicensePage() {
         </div>
 
         <div className="panel space-y-4 p-6">
+          <h2 className="text-sm uppercase tracking-widest text-muted-foreground">
+            Licensed features
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {(ent?.features ?? []).map((f) => (
+              <span
+                key={f}
+                className="rounded-full border border-border px-3 py-1 text-xs"
+              >
+                {f}
+              </span>
+            ))}
+            {!ent?.features.length && (
+              <p className="text-sm text-muted-foreground">
+                No features enabled — upload a signed license file.
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="panel space-y-4 p-6 lg:col-span-2">
           <h2 className="text-sm uppercase tracking-widest text-muted-foreground">
             Upload license file
           </h2>
