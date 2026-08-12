@@ -10,33 +10,336 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConsoleRouteRouteImport } from './routes/console/route'
+import { Route as RedirectRouteImport } from './routes/redirect'
+import { Route as VendorRouteRouteImport } from './routes/vendor/route'
+import { Route as ConsoleIndexRouteImport } from './routes/console/index'
+import { Route as ConsoleAiChatRouteImport } from './routes/console/ai-chat'
+import { Route as ConsoleAiInvestigationRouteImport } from './routes/console/ai-investigation'
+import { Route as ConsoleAlertsRouteImport } from './routes/console/alerts'
+import { Route as ConsoleHuntingRouteImport } from './routes/console/hunting'
+import { Route as ConsoleIncidentsRouteImport } from './routes/console/incidents'
+import { Route as ConsoleIngestRouteImport } from './routes/console/ingest'
+import { Route as ConsoleLdapRouteImport } from './routes/console/ldap'
+import { Route as ConsoleLicenseRouteImport } from './routes/console/license'
+import { Route as ConsoleMitreRouteImport } from './routes/console/mitre'
+import { Route as ConsolePoliciesRouteImport } from './routes/console/policies'
+import { Route as ConsoleRiskRouteImport } from './routes/console/risk'
+import { Route as ConsoleRulesRouteImport } from './routes/console/rules'
+import { Route as ConsoleSearchRouteImport } from './routes/console/search'
+import { Route as ConsoleSourcesRouteImport } from './routes/console/sources'
+import { Route as ConsoleUsersRouteImport } from './routes/console/users'
+import { Route as VendorIndexRouteImport } from './routes/vendor/index'
+import { Route as VendorAuditRouteImport } from './routes/vendor/audit'
+import { Route as VendorGeneratorRouteImport } from './routes/vendor/generator'
+import { Route as VendorHealthRouteImport } from './routes/vendor/health'
+import { Route as VendorLicensesRouteImport } from './routes/vendor/licenses'
+import { Route as VendorOrganizationsRouteImport } from './routes/vendor/organizations'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConsoleRouteRoute = ConsoleRouteRouteImport.update({
+  id: '/console',
+  path: '/console',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RedirectRoute = RedirectRouteImport.update({
+  id: '/redirect',
+  path: '/redirect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorRouteRoute = VendorRouteRouteImport.update({
+  id: '/vendor',
+  path: '/vendor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsoleIndexRoute = ConsoleIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleAiChatRoute = ConsoleAiChatRouteImport.update({
+  id: '/ai-chat',
+  path: '/ai-chat',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleAiInvestigationRoute = ConsoleAiInvestigationRouteImport.update({
+  id: '/ai-investigation',
+  path: '/ai-investigation',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleAlertsRoute = ConsoleAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleHuntingRoute = ConsoleHuntingRouteImport.update({
+  id: '/hunting',
+  path: '/hunting',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleIncidentsRoute = ConsoleIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleIngestRoute = ConsoleIngestRouteImport.update({
+  id: '/ingest',
+  path: '/ingest',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleLdapRoute = ConsoleLdapRouteImport.update({
+  id: '/ldap',
+  path: '/ldap',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleLicenseRoute = ConsoleLicenseRouteImport.update({
+  id: '/license',
+  path: '/license',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleMitreRoute = ConsoleMitreRouteImport.update({
+  id: '/mitre',
+  path: '/mitre',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsolePoliciesRoute = ConsolePoliciesRouteImport.update({
+  id: '/policies',
+  path: '/policies',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleRiskRoute = ConsoleRiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleRulesRoute = ConsoleRulesRouteImport.update({
+  id: '/rules',
+  path: '/rules',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleSearchRoute = ConsoleSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleSourcesRoute = ConsoleSourcesRouteImport.update({
+  id: '/sources',
+  path: '/sources',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleUsersRoute = ConsoleUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const VendorIndexRoute = VendorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VendorRouteRoute,
+} as any)
+const VendorAuditRoute = VendorAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => VendorRouteRoute,
+} as any)
+const VendorGeneratorRoute = VendorGeneratorRouteImport.update({
+  id: '/generator',
+  path: '/generator',
+  getParentRoute: () => VendorRouteRoute,
+} as any)
+const VendorHealthRoute = VendorHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => VendorRouteRoute,
+} as any)
+const VendorLicensesRoute = VendorLicensesRouteImport.update({
+  id: '/licenses',
+  path: '/licenses',
+  getParentRoute: () => VendorRouteRoute,
+} as any)
+const VendorOrganizationsRoute = VendorOrganizationsRouteImport.update({
+  id: '/organizations',
+  path: '/organizations',
+  getParentRoute: () => VendorRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteRouteWithChildren
+  '/vendor': typeof VendorRouteRouteWithChildren
+  '/redirect': typeof RedirectRoute
+  '/console/ai-chat': typeof ConsoleAiChatRoute
+  '/console/ai-investigation': typeof ConsoleAiInvestigationRoute
+  '/console/alerts': typeof ConsoleAlertsRoute
+  '/console/hunting': typeof ConsoleHuntingRoute
+  '/console/incidents': typeof ConsoleIncidentsRoute
+  '/console/ingest': typeof ConsoleIngestRoute
+  '/console/ldap': typeof ConsoleLdapRoute
+  '/console/license': typeof ConsoleLicenseRoute
+  '/console/mitre': typeof ConsoleMitreRoute
+  '/console/policies': typeof ConsolePoliciesRoute
+  '/console/risk': typeof ConsoleRiskRoute
+  '/console/rules': typeof ConsoleRulesRoute
+  '/console/search': typeof ConsoleSearchRoute
+  '/console/sources': typeof ConsoleSourcesRoute
+  '/console/users': typeof ConsoleUsersRoute
+  '/vendor/audit': typeof VendorAuditRoute
+  '/vendor/generator': typeof VendorGeneratorRoute
+  '/vendor/health': typeof VendorHealthRoute
+  '/vendor/licenses': typeof VendorLicensesRoute
+  '/vendor/organizations': typeof VendorOrganizationsRoute
+  '/console/': typeof ConsoleIndexRoute
+  '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/redirect': typeof RedirectRoute
+  '/console/ai-chat': typeof ConsoleAiChatRoute
+  '/console/ai-investigation': typeof ConsoleAiInvestigationRoute
+  '/console/alerts': typeof ConsoleAlertsRoute
+  '/console/hunting': typeof ConsoleHuntingRoute
+  '/console/incidents': typeof ConsoleIncidentsRoute
+  '/console/ingest': typeof ConsoleIngestRoute
+  '/console/ldap': typeof ConsoleLdapRoute
+  '/console/license': typeof ConsoleLicenseRoute
+  '/console/mitre': typeof ConsoleMitreRoute
+  '/console/policies': typeof ConsolePoliciesRoute
+  '/console/risk': typeof ConsoleRiskRoute
+  '/console/rules': typeof ConsoleRulesRoute
+  '/console/search': typeof ConsoleSearchRoute
+  '/console/sources': typeof ConsoleSourcesRoute
+  '/console/users': typeof ConsoleUsersRoute
+  '/vendor/audit': typeof VendorAuditRoute
+  '/vendor/generator': typeof VendorGeneratorRoute
+  '/vendor/health': typeof VendorHealthRoute
+  '/vendor/licenses': typeof VendorLicensesRoute
+  '/vendor/organizations': typeof VendorOrganizationsRoute
+  '/console': typeof ConsoleIndexRoute
+  '/vendor': typeof VendorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteRouteWithChildren
+  '/vendor': typeof VendorRouteRouteWithChildren
+  '/redirect': typeof RedirectRoute
+  '/console/ai-chat': typeof ConsoleAiChatRoute
+  '/console/ai-investigation': typeof ConsoleAiInvestigationRoute
+  '/console/alerts': typeof ConsoleAlertsRoute
+  '/console/hunting': typeof ConsoleHuntingRoute
+  '/console/incidents': typeof ConsoleIncidentsRoute
+  '/console/ingest': typeof ConsoleIngestRoute
+  '/console/ldap': typeof ConsoleLdapRoute
+  '/console/license': typeof ConsoleLicenseRoute
+  '/console/mitre': typeof ConsoleMitreRoute
+  '/console/policies': typeof ConsolePoliciesRoute
+  '/console/risk': typeof ConsoleRiskRoute
+  '/console/rules': typeof ConsoleRulesRoute
+  '/console/search': typeof ConsoleSearchRoute
+  '/console/sources': typeof ConsoleSourcesRoute
+  '/console/users': typeof ConsoleUsersRoute
+  '/vendor/audit': typeof VendorAuditRoute
+  '/vendor/generator': typeof VendorGeneratorRoute
+  '/vendor/health': typeof VendorHealthRoute
+  '/vendor/licenses': typeof VendorLicensesRoute
+  '/vendor/organizations': typeof VendorOrganizationsRoute
+  '/console/': typeof ConsoleIndexRoute
+  '/vendor/': typeof VendorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/console'
+    | '/vendor'
+    | '/redirect'
+    | '/console/ai-chat'
+    | '/console/ai-investigation'
+    | '/console/alerts'
+    | '/console/hunting'
+    | '/console/incidents'
+    | '/console/ingest'
+    | '/console/ldap'
+    | '/console/license'
+    | '/console/mitre'
+    | '/console/policies'
+    | '/console/risk'
+    | '/console/rules'
+    | '/console/search'
+    | '/console/sources'
+    | '/console/users'
+    | '/vendor/audit'
+    | '/vendor/generator'
+    | '/vendor/health'
+    | '/vendor/licenses'
+    | '/vendor/organizations'
+    | '/console/'
+    | '/vendor/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/redirect'
+    | '/console/ai-chat'
+    | '/console/ai-investigation'
+    | '/console/alerts'
+    | '/console/hunting'
+    | '/console/incidents'
+    | '/console/ingest'
+    | '/console/ldap'
+    | '/console/license'
+    | '/console/mitre'
+    | '/console/policies'
+    | '/console/risk'
+    | '/console/rules'
+    | '/console/search'
+    | '/console/sources'
+    | '/console/users'
+    | '/vendor/audit'
+    | '/vendor/generator'
+    | '/vendor/health'
+    | '/vendor/licenses'
+    | '/vendor/organizations'
+    | '/console'
+    | '/vendor'
+  id:
+    | '__root__'
+    | '/'
+    | '/console'
+    | '/vendor'
+    | '/redirect'
+    | '/console/ai-chat'
+    | '/console/ai-investigation'
+    | '/console/alerts'
+    | '/console/hunting'
+    | '/console/incidents'
+    | '/console/ingest'
+    | '/console/ldap'
+    | '/console/license'
+    | '/console/mitre'
+    | '/console/policies'
+    | '/console/risk'
+    | '/console/rules'
+    | '/console/search'
+    | '/console/sources'
+    | '/console/users'
+    | '/vendor/audit'
+    | '/vendor/generator'
+    | '/vendor/health'
+    | '/vendor/licenses'
+    | '/vendor/organizations'
+    | '/console/'
+    | '/vendor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConsoleRouteRoute: typeof ConsoleRouteRouteWithChildren
+  VendorRouteRoute: typeof VendorRouteRouteWithChildren
+  RedirectRoute: typeof RedirectRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +351,254 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/console': {
+      id: '/console'
+      path: '/console'
+      fullPath: '/console'
+      preLoaderRoute: typeof ConsoleRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/redirect': {
+      id: '/redirect'
+      path: '/redirect'
+      fullPath: '/redirect'
+      preLoaderRoute: typeof RedirectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendor': {
+      id: '/vendor'
+      path: '/vendor'
+      fullPath: '/vendor'
+      preLoaderRoute: typeof VendorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/console/': {
+      id: '/console/'
+      path: '/'
+      fullPath: '/console/'
+      preLoaderRoute: typeof ConsoleIndexRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/ai-chat': {
+      id: '/console/ai-chat'
+      path: '/ai-chat'
+      fullPath: '/console/ai-chat'
+      preLoaderRoute: typeof ConsoleAiChatRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/ai-investigation': {
+      id: '/console/ai-investigation'
+      path: '/ai-investigation'
+      fullPath: '/console/ai-investigation'
+      preLoaderRoute: typeof ConsoleAiInvestigationRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/alerts': {
+      id: '/console/alerts'
+      path: '/alerts'
+      fullPath: '/console/alerts'
+      preLoaderRoute: typeof ConsoleAlertsRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/hunting': {
+      id: '/console/hunting'
+      path: '/hunting'
+      fullPath: '/console/hunting'
+      preLoaderRoute: typeof ConsoleHuntingRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/incidents': {
+      id: '/console/incidents'
+      path: '/incidents'
+      fullPath: '/console/incidents'
+      preLoaderRoute: typeof ConsoleIncidentsRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/ingest': {
+      id: '/console/ingest'
+      path: '/ingest'
+      fullPath: '/console/ingest'
+      preLoaderRoute: typeof ConsoleIngestRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/ldap': {
+      id: '/console/ldap'
+      path: '/ldap'
+      fullPath: '/console/ldap'
+      preLoaderRoute: typeof ConsoleLdapRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/license': {
+      id: '/console/license'
+      path: '/license'
+      fullPath: '/console/license'
+      preLoaderRoute: typeof ConsoleLicenseRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/mitre': {
+      id: '/console/mitre'
+      path: '/mitre'
+      fullPath: '/console/mitre'
+      preLoaderRoute: typeof ConsoleMitreRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/policies': {
+      id: '/console/policies'
+      path: '/policies'
+      fullPath: '/console/policies'
+      preLoaderRoute: typeof ConsolePoliciesRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/risk': {
+      id: '/console/risk'
+      path: '/risk'
+      fullPath: '/console/risk'
+      preLoaderRoute: typeof ConsoleRiskRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/rules': {
+      id: '/console/rules'
+      path: '/rules'
+      fullPath: '/console/rules'
+      preLoaderRoute: typeof ConsoleRulesRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/search': {
+      id: '/console/search'
+      path: '/search'
+      fullPath: '/console/search'
+      preLoaderRoute: typeof ConsoleSearchRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/sources': {
+      id: '/console/sources'
+      path: '/sources'
+      fullPath: '/console/sources'
+      preLoaderRoute: typeof ConsoleSourcesRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/users': {
+      id: '/console/users'
+      path: '/users'
+      fullPath: '/console/users'
+      preLoaderRoute: typeof ConsoleUsersRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/vendor/': {
+      id: '/vendor/'
+      path: '/'
+      fullPath: '/vendor/'
+      preLoaderRoute: typeof VendorIndexRouteImport
+      parentRoute: typeof VendorRouteRoute
+    }
+    '/vendor/audit': {
+      id: '/vendor/audit'
+      path: '/audit'
+      fullPath: '/vendor/audit'
+      preLoaderRoute: typeof VendorAuditRouteImport
+      parentRoute: typeof VendorRouteRoute
+    }
+    '/vendor/generator': {
+      id: '/vendor/generator'
+      path: '/generator'
+      fullPath: '/vendor/generator'
+      preLoaderRoute: typeof VendorGeneratorRouteImport
+      parentRoute: typeof VendorRouteRoute
+    }
+    '/vendor/health': {
+      id: '/vendor/health'
+      path: '/health'
+      fullPath: '/vendor/health'
+      preLoaderRoute: typeof VendorHealthRouteImport
+      parentRoute: typeof VendorRouteRoute
+    }
+    '/vendor/licenses': {
+      id: '/vendor/licenses'
+      path: '/licenses'
+      fullPath: '/vendor/licenses'
+      preLoaderRoute: typeof VendorLicensesRouteImport
+      parentRoute: typeof VendorRouteRoute
+    }
+    '/vendor/organizations': {
+      id: '/vendor/organizations'
+      path: '/organizations'
+      fullPath: '/vendor/organizations'
+      preLoaderRoute: typeof VendorOrganizationsRouteImport
+      parentRoute: typeof VendorRouteRoute
+    }
   }
 }
 
+interface ConsoleRouteRouteChildren {
+  ConsoleAiChatRoute: typeof ConsoleAiChatRoute
+  ConsoleAiInvestigationRoute: typeof ConsoleAiInvestigationRoute
+  ConsoleAlertsRoute: typeof ConsoleAlertsRoute
+  ConsoleHuntingRoute: typeof ConsoleHuntingRoute
+  ConsoleIncidentsRoute: typeof ConsoleIncidentsRoute
+  ConsoleIngestRoute: typeof ConsoleIngestRoute
+  ConsoleLdapRoute: typeof ConsoleLdapRoute
+  ConsoleLicenseRoute: typeof ConsoleLicenseRoute
+  ConsoleMitreRoute: typeof ConsoleMitreRoute
+  ConsolePoliciesRoute: typeof ConsolePoliciesRoute
+  ConsoleRiskRoute: typeof ConsoleRiskRoute
+  ConsoleRulesRoute: typeof ConsoleRulesRoute
+  ConsoleSearchRoute: typeof ConsoleSearchRoute
+  ConsoleSourcesRoute: typeof ConsoleSourcesRoute
+  ConsoleUsersRoute: typeof ConsoleUsersRoute
+  ConsoleIndexRoute: typeof ConsoleIndexRoute
+}
+
+const ConsoleRouteRouteChildren: ConsoleRouteRouteChildren = {
+  ConsoleAiChatRoute: ConsoleAiChatRoute,
+  ConsoleAiInvestigationRoute: ConsoleAiInvestigationRoute,
+  ConsoleAlertsRoute: ConsoleAlertsRoute,
+  ConsoleHuntingRoute: ConsoleHuntingRoute,
+  ConsoleIncidentsRoute: ConsoleIncidentsRoute,
+  ConsoleIngestRoute: ConsoleIngestRoute,
+  ConsoleLdapRoute: ConsoleLdapRoute,
+  ConsoleLicenseRoute: ConsoleLicenseRoute,
+  ConsoleMitreRoute: ConsoleMitreRoute,
+  ConsolePoliciesRoute: ConsolePoliciesRoute,
+  ConsoleRiskRoute: ConsoleRiskRoute,
+  ConsoleRulesRoute: ConsoleRulesRoute,
+  ConsoleSearchRoute: ConsoleSearchRoute,
+  ConsoleSourcesRoute: ConsoleSourcesRoute,
+  ConsoleUsersRoute: ConsoleUsersRoute,
+  ConsoleIndexRoute: ConsoleIndexRoute,
+}
+
+const ConsoleRouteRouteWithChildren = ConsoleRouteRoute._addFileChildren(
+  ConsoleRouteRouteChildren,
+)
+
+interface VendorRouteRouteChildren {
+  VendorAuditRoute: typeof VendorAuditRoute
+  VendorGeneratorRoute: typeof VendorGeneratorRoute
+  VendorHealthRoute: typeof VendorHealthRoute
+  VendorLicensesRoute: typeof VendorLicensesRoute
+  VendorOrganizationsRoute: typeof VendorOrganizationsRoute
+  VendorIndexRoute: typeof VendorIndexRoute
+}
+
+const VendorRouteRouteChildren: VendorRouteRouteChildren = {
+  VendorAuditRoute: VendorAuditRoute,
+  VendorGeneratorRoute: VendorGeneratorRoute,
+  VendorHealthRoute: VendorHealthRoute,
+  VendorLicensesRoute: VendorLicensesRoute,
+  VendorOrganizationsRoute: VendorOrganizationsRoute,
+  VendorIndexRoute: VendorIndexRoute,
+}
+
+const VendorRouteRouteWithChildren = VendorRouteRoute._addFileChildren(
+  VendorRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConsoleRouteRoute: ConsoleRouteRouteWithChildren,
+  VendorRouteRoute: VendorRouteRouteWithChildren,
+  RedirectRoute: RedirectRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
