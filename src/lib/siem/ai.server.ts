@@ -236,7 +236,7 @@ export async function listInvestigations(userId: string) {
         .from("alerts")
         .select("id, title, severity, status")
         .in("id", ids)
-    : { data: [] as { id: string }[] };
+    : { data: [] as { id: string; title: string; severity: string; status: string }[] };
   return {
     enabled: ent.features.includes("ai_investigation"),
     plan: ent.plan,
