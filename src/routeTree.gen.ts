@@ -17,6 +17,7 @@ import { Route as ConsoleIndexRouteImport } from './routes/console/index'
 import { Route as ConsoleAiChatRouteImport } from './routes/console/ai-chat'
 import { Route as ConsoleAiInvestigationRouteImport } from './routes/console/ai-investigation'
 import { Route as ConsoleAlertsRouteImport } from './routes/console/alerts'
+import { Route as ConsoleHuntingRouteImport } from './routes/console/hunting'
 import { Route as ConsoleIncidentsRouteImport } from './routes/console/incidents'
 import { Route as ConsoleIngestRouteImport } from './routes/console/ingest'
 import { Route as ConsoleLdapRouteImport } from './routes/console/ldap'
@@ -71,6 +72,11 @@ const ConsoleAiInvestigationRoute = ConsoleAiInvestigationRouteImport.update({
 const ConsoleAlertsRoute = ConsoleAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleHuntingRoute = ConsoleHuntingRouteImport.update({
+  id: '/hunting',
+  path: '/hunting',
   getParentRoute: () => ConsoleRouteRoute,
 } as any)
 const ConsoleIncidentsRoute = ConsoleIncidentsRouteImport.update({
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/console/ai-chat': typeof ConsoleAiChatRoute
   '/console/ai-investigation': typeof ConsoleAiInvestigationRoute
   '/console/alerts': typeof ConsoleAlertsRoute
+  '/console/hunting': typeof ConsoleHuntingRoute
   '/console/incidents': typeof ConsoleIncidentsRoute
   '/console/ingest': typeof ConsoleIngestRoute
   '/console/ldap': typeof ConsoleLdapRoute
@@ -180,6 +187,7 @@ export interface FileRoutesByTo {
   '/console/ai-chat': typeof ConsoleAiChatRoute
   '/console/ai-investigation': typeof ConsoleAiInvestigationRoute
   '/console/alerts': typeof ConsoleAlertsRoute
+  '/console/hunting': typeof ConsoleHuntingRoute
   '/console/incidents': typeof ConsoleIncidentsRoute
   '/console/ingest': typeof ConsoleIngestRoute
   '/console/ldap': typeof ConsoleLdapRoute
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/console/ai-chat': typeof ConsoleAiChatRoute
   '/console/ai-investigation': typeof ConsoleAiInvestigationRoute
   '/console/alerts': typeof ConsoleAlertsRoute
+  '/console/hunting': typeof ConsoleHuntingRoute
   '/console/incidents': typeof ConsoleIncidentsRoute
   '/console/ingest': typeof ConsoleIngestRoute
   '/console/ldap': typeof ConsoleLdapRoute
@@ -233,6 +242,7 @@ export interface FileRouteTypes {
     | '/console/ai-chat'
     | '/console/ai-investigation'
     | '/console/alerts'
+    | '/console/hunting'
     | '/console/incidents'
     | '/console/ingest'
     | '/console/ldap'
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/console/ai-chat'
     | '/console/ai-investigation'
     | '/console/alerts'
+    | '/console/hunting'
     | '/console/incidents'
     | '/console/ingest'
     | '/console/ldap'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/console/ai-chat'
     | '/console/ai-investigation'
     | '/console/alerts'
+    | '/console/hunting'
     | '/console/incidents'
     | '/console/ingest'
     | '/console/ldap'
@@ -362,6 +374,13 @@ declare module '@tanstack/react-router' {
       path: '/alerts'
       fullPath: '/console/alerts'
       preLoaderRoute: typeof ConsoleAlertsRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/hunting': {
+      id: '/console/hunting'
+      path: '/hunting'
+      fullPath: '/console/hunting'
+      preLoaderRoute: typeof ConsoleHuntingRouteImport
       parentRoute: typeof ConsoleRouteRoute
     }
     '/console/incidents': {
@@ -476,6 +495,7 @@ interface ConsoleRouteRouteChildren {
   ConsoleAiChatRoute: typeof ConsoleAiChatRoute
   ConsoleAiInvestigationRoute: typeof ConsoleAiInvestigationRoute
   ConsoleAlertsRoute: typeof ConsoleAlertsRoute
+  ConsoleHuntingRoute: typeof ConsoleHuntingRoute
   ConsoleIncidentsRoute: typeof ConsoleIncidentsRoute
   ConsoleIngestRoute: typeof ConsoleIngestRoute
   ConsoleLdapRoute: typeof ConsoleLdapRoute
@@ -492,6 +512,7 @@ const ConsoleRouteRouteChildren: ConsoleRouteRouteChildren = {
   ConsoleAiChatRoute: ConsoleAiChatRoute,
   ConsoleAiInvestigationRoute: ConsoleAiInvestigationRoute,
   ConsoleAlertsRoute: ConsoleAlertsRoute,
+  ConsoleHuntingRoute: ConsoleHuntingRoute,
   ConsoleIncidentsRoute: ConsoleIncidentsRoute,
   ConsoleIngestRoute: ConsoleIngestRoute,
   ConsoleLdapRoute: ConsoleLdapRoute,
