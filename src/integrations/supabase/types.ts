@@ -14,6 +14,85 @@ export type Database = {
   }
   public: {
     Tables: {
+      alerts: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          description: string
+          entity: string | null
+          event_count: number
+          event_ids: Json
+          id: string
+          incident_id: string | null
+          notified_at: string | null
+          org_id: string
+          rule_id: string | null
+          rule_name: string
+          severity: Database["public"]["Enums"]["event_severity"]
+          status: Database["public"]["Enums"]["alert_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          description?: string
+          entity?: string | null
+          event_count?: number
+          event_ids?: Json
+          id?: string
+          incident_id?: string | null
+          notified_at?: string | null
+          org_id: string
+          rule_id?: string | null
+          rule_name?: string
+          severity?: Database["public"]["Enums"]["event_severity"]
+          status?: Database["public"]["Enums"]["alert_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          description?: string
+          entity?: string | null
+          event_count?: number
+          event_ids?: Json
+          id?: string
+          incident_id?: string | null
+          notified_at?: string | null
+          org_id?: string
+          rule_id?: string | null
+          rule_name?: string
+          severity?: Database["public"]["Enums"]["event_severity"]
+          status?: Database["public"]["Enums"]["alert_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_incident_fk"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alerts_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alerts_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "correlation_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -57,6 +136,318 @@ export type Database = {
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      correlation_rules: {
+        Row: {
+          conditions: Json
+          created_at: string
+          description: string
+          enabled: boolean
+          group_by: string
+          id: string
+          is_builtin: boolean
+          last_triggered_at: string | null
+          name: string
+          org_id: string
+          rule_type: Database["public"]["Enums"]["rule_type"]
+          severity: Database["public"]["Enums"]["event_severity"]
+          threshold: number
+          window_minutes: number
+        }
+        Insert: {
+          conditions?: Json
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          group_by?: string
+          id?: string
+          is_builtin?: boolean
+          last_triggered_at?: string | null
+          name: string
+          org_id: string
+          rule_type?: Database["public"]["Enums"]["rule_type"]
+          severity?: Database["public"]["Enums"]["event_severity"]
+          threshold?: number
+          window_minutes?: number
+        }
+        Update: {
+          conditions?: Json
+          created_at?: string
+          description?: string
+          enabled?: boolean
+          group_by?: string
+          id?: string
+          is_builtin?: boolean
+          last_triggered_at?: string | null
+          name?: string
+          org_id?: string
+          rule_type?: Database["public"]["Enums"]["rule_type"]
+          severity?: Database["public"]["Enums"]["event_severity"]
+          threshold?: number
+          window_minutes?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "correlation_rules_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_outbox: {
+        Row: {
+          body: string
+          category: string
+          created_at: string
+          error: string | null
+          id: string
+          org_id: string
+          recipients: string
+          sent_at: string | null
+          status: string
+          subject: string
+        }
+        Insert: {
+          body: string
+          category?: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          org_id: string
+          recipients: string
+          sent_at?: string | null
+          status?: string
+          subject: string
+        }
+        Update: {
+          body?: string
+          category?: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          org_id?: string
+          recipients?: string
+          sent_at?: string | null
+          status?: string
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_outbox_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_notes: {
+        Row: {
+          author_id: string | null
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+          incident_id: string
+          org_id: string
+        }
+        Insert: {
+          author_id?: string | null
+          author_name?: string
+          body: string
+          created_at?: string
+          id?: string
+          incident_id: string
+          org_id: string
+        }
+        Update: {
+          author_id?: string | null
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+          incident_id?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_notes_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incident_notes_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incident_timeline: {
+        Row: {
+          action: string
+          actor_name: string
+          created_at: string
+          details: Json
+          id: string
+          incident_id: string
+          org_id: string
+        }
+        Insert: {
+          action: string
+          actor_name?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          incident_id: string
+          org_id: string
+        }
+        Update: {
+          action?: string
+          actor_name?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          incident_id?: string
+          org_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incident_timeline_incident_id_fkey"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "incidents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incident_timeline_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incidents: {
+        Row: {
+          assigned_to: string | null
+          closed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string
+          id: string
+          org_id: string
+          reference: string
+          severity: Database["public"]["Enums"]["event_severity"]
+          status: Database["public"]["Enums"]["incident_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          org_id: string
+          reference: string
+          severity?: Database["public"]["Enums"]["event_severity"]
+          status?: Database["public"]["Enums"]["incident_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          id?: string
+          org_id?: string
+          reference?: string
+          severity?: Database["public"]["Enums"]["event_severity"]
+          status?: Database["public"]["Enums"]["incident_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incidents_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ingestion_jobs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          failed_rows: number
+          file_name: string
+          finished_at: string | null
+          format: string
+          id: string
+          imported_rows: number
+          message: string
+          org_id: string
+          source_id: string | null
+          status: Database["public"]["Enums"]["ingestion_status"]
+          total_rows: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          failed_rows?: number
+          file_name: string
+          finished_at?: string | null
+          format: string
+          id?: string
+          imported_rows?: number
+          message?: string
+          org_id: string
+          source_id?: string | null
+          status?: Database["public"]["Enums"]["ingestion_status"]
+          total_rows?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          failed_rows?: number
+          file_name?: string
+          finished_at?: string | null
+          format?: string
+          id?: string
+          imported_rows?: number
+          message?: string
+          org_id?: string
+          source_id?: string | null
+          status?: Database["public"]["Enums"]["ingestion_status"]
+          total_rows?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ingestion_jobs_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ingestion_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
             referencedColumns: ["id"]
           },
         ]
@@ -252,6 +643,84 @@ export type Database = {
           },
         ]
       }
+      log_events: {
+        Row: {
+          category: string | null
+          created_at: string
+          device_type: string | null
+          event_type: string
+          host: string | null
+          id: string
+          is_demo: boolean
+          org_id: string
+          parsed_fields: Json
+          raw_message: string
+          received_at: string
+          severity: Database["public"]["Enums"]["event_severity"]
+          source_id: string | null
+          source_ip: string | null
+          source_type: string
+          timestamp: string
+          user: string | null
+          vendor: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          device_type?: string | null
+          event_type?: string
+          host?: string | null
+          id?: string
+          is_demo?: boolean
+          org_id: string
+          parsed_fields?: Json
+          raw_message?: string
+          received_at?: string
+          severity?: Database["public"]["Enums"]["event_severity"]
+          source_id?: string | null
+          source_ip?: string | null
+          source_type?: string
+          timestamp?: string
+          user?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          device_type?: string | null
+          event_type?: string
+          host?: string | null
+          id?: string
+          is_demo?: boolean
+          org_id?: string
+          parsed_fields?: Json
+          raw_message?: string
+          received_at?: string
+          severity?: Database["public"]["Enums"]["event_severity"]
+          source_id?: string | null
+          source_ip?: string | null
+          source_type?: string
+          timestamp?: string
+          user?: string | null
+          vendor?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "log_events_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "log_events_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           contact_email: string | null
@@ -415,6 +884,50 @@ export type Database = {
           },
         ]
       }
+      reports: {
+        Row: {
+          created_at: string
+          format: string
+          generated_by: string | null
+          id: string
+          name: string
+          org_id: string
+          params: Json
+          report_type: string
+          summary: Json
+        }
+        Insert: {
+          created_at?: string
+          format?: string
+          generated_by?: string | null
+          id?: string
+          name: string
+          org_id: string
+          params?: Json
+          report_type: string
+          summary?: Json
+        }
+        Update: {
+          created_at?: string
+          format?: string
+          generated_by?: string | null
+          id?: string
+          name?: string
+          org_id?: string
+          params?: Json
+          report_type?: string
+          summary?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           id: string
@@ -438,6 +951,154 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "permissions"
             referencedColumns: ["key"]
+          },
+        ]
+      }
+      saved_searches: {
+        Row: {
+          created_at: string
+          filters: Json
+          id: string
+          name: string
+          org_id: string
+          owner_id: string
+          query: string
+          time_range: string
+        }
+        Insert: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          name: string
+          org_id: string
+          owner_id: string
+          query?: string
+          time_range?: string
+        }
+        Update: {
+          created_at?: string
+          filters?: Json
+          id?: string
+          name?: string
+          org_id?: string
+          owner_id?: string
+          query?: string
+          time_range?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_searches_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      smtp_settings: {
+        Row: {
+          alert_recipients: string
+          daily_report: boolean
+          enabled: boolean
+          from_address: string
+          from_name: string
+          host: string
+          notify_critical: boolean
+          notify_high: boolean
+          org_id: string
+          password_set: boolean
+          port: number
+          updated_at: string
+          use_tls: boolean
+          username: string
+          weekly_report: boolean
+        }
+        Insert: {
+          alert_recipients?: string
+          daily_report?: boolean
+          enabled?: boolean
+          from_address?: string
+          from_name?: string
+          host?: string
+          notify_critical?: boolean
+          notify_high?: boolean
+          org_id: string
+          password_set?: boolean
+          port?: number
+          updated_at?: string
+          use_tls?: boolean
+          username?: string
+          weekly_report?: boolean
+        }
+        Update: {
+          alert_recipients?: string
+          daily_report?: boolean
+          enabled?: boolean
+          from_address?: string
+          from_name?: string
+          host?: string
+          notify_critical?: boolean
+          notify_high?: boolean
+          org_id?: string
+          password_set?: boolean
+          port?: number
+          updated_at?: string
+          use_tls?: boolean
+          username?: string
+          weekly_report?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "smtp_settings_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_stats: {
+        Row: {
+          eps: number
+          event_count: number
+          health: string
+          last_event_at: string | null
+          org_id: string
+          source_id: string
+          updated_at: string
+        }
+        Insert: {
+          eps?: number
+          event_count?: number
+          health?: string
+          last_event_at?: string | null
+          org_id: string
+          source_id: string
+          updated_at?: string
+        }
+        Update: {
+          eps?: number
+          event_count?: number
+          health?: string
+          last_event_at?: string | null
+          org_id?: string
+          source_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_stats_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_stats_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: true
+            referencedRelation: "sources"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -540,10 +1201,31 @@ export type Database = {
       is_super_admin: { Args: never; Returns: boolean }
     }
     Enums: {
+      alert_status:
+        | "new"
+        | "acknowledged"
+        | "in_progress"
+        | "resolved"
+        | "closed"
+        | "false_positive"
       app_role: "super_admin" | "org_admin" | "analyst" | "viewer"
       auth_method: "local" | "ldap"
+      event_severity: "critical" | "high" | "medium" | "low" | "info"
+      incident_status:
+        | "new"
+        | "investigating"
+        | "contained"
+        | "resolved"
+        | "closed"
+      ingestion_status: "pending" | "running" | "completed" | "failed"
       license_plan: "STARTER" | "PROFESSIONAL" | "ENTERPRISE_AI"
       license_status: "active" | "suspended" | "expired" | "revoked"
+      rule_type:
+        | "threshold"
+        | "sequence"
+        | "pattern"
+        | "anomaly"
+        | "correlation"
       source_status: "enabled" | "disabled"
       user_status: "active" | "disabled" | "locked"
     }
@@ -673,10 +1355,28 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      alert_status: [
+        "new",
+        "acknowledged",
+        "in_progress",
+        "resolved",
+        "closed",
+        "false_positive",
+      ],
       app_role: ["super_admin", "org_admin", "analyst", "viewer"],
       auth_method: ["local", "ldap"],
+      event_severity: ["critical", "high", "medium", "low", "info"],
+      incident_status: [
+        "new",
+        "investigating",
+        "contained",
+        "resolved",
+        "closed",
+      ],
+      ingestion_status: ["pending", "running", "completed", "failed"],
       license_plan: ["STARTER", "PROFESSIONAL", "ENTERPRISE_AI"],
       license_status: ["active", "suspended", "expired", "revoked"],
+      rule_type: ["threshold", "sequence", "pattern", "anomaly", "correlation"],
       source_status: ["enabled", "disabled"],
       user_status: ["active", "disabled", "locked"],
     },
