@@ -30,6 +30,59 @@ function signingSecret(): string {
   );
 }
 
+/** Deterministic JSON so a signature always covers the same bytes. */
+export function canonicalJson(value: unknown): string {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  const obj = value as Record<string, unknown>;
+  const body = Object.keys(obj)
+    .sort()
+    .filter((k) => obj[k] !== undefined)
+    .map((k) => `${JSON.stringify(k)}:${canonicalJson(obj[k])}`)
+    .join(",");
+  return `{${body}}`;
+}
+
+function b64(bytes: ArrayBuffer): string {
+  return btoa(String.fromCharCode(...new Uint8Array(bytes)));
+}
+
+function fromB64(value: string): Uint8Array {
+  const bin = atob(value.replace(/\s+/g, ""));
+  return Uint8Array.from(bin, (c) => c.charCodeAt(0));
+}
+
+/* ------------------------- license cryptography ------------------------- */
+
+export const LICENSE_ALG_ECDSA = "ECDSA-P256-SHA256";
+export const LICENSE_ALG_HMAC = "HMAC-SHA256";
+
+const ECDSA_PARAMS = { name: "ECDSA", namedCurve: "P-256" } as const;
+
+async function ecdsaPrivateKey(): Promise<CryptoKey | null> {
+  const raw = process.env["LICENSE_PRIVATE_KEY"];
+  if (!raw) return null;
+  return crypto.subtle.importKey(
+    "pkcs8",
+    fromB64(raw) as unknown as ArrayBuffer,
+    ECDSA_PARAMS,
+    false,
+    ["sign"],
+  );
+}
+
+async function ecdsaPublicKey(): Promise<CryptoKey | null> {
+  const raw = process.env["LICENSE_PUBLIC_KEY"];
+  if (!raw) return null;
+  return crypto.subtle.importKey(
+    "spki",
+    fromB64(raw) as unknown as ArrayBuffer,
+    ECDSA_PARAMS,
+    false,
+    ["verify"],
+  );
+}
+
 /** HMAC-SHA256 signature. The signing secret never leaves the server. */
 export async function signPayload(payload: unknown): Promise<string> {
   const key = await crypto.subtle.importKey(
@@ -47,18 +100,79 @@ export async function signPayload(payload: unknown): Promise<string> {
   return btoa(String.fromCharCode(...new Uint8Array(sig)));
 }
 
+function constantTimeEqual(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 export async function verifyPayload(
   payload: unknown,
   signature: string,
 ): Promise<boolean> {
-  const expected = await signPayload(payload);
-  if (expected.length !== signature.length) return false;
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected.charCodeAt(i) ^ signature.charCodeAt(i);
-  }
-  return diff === 0;
+  return constantTimeEqual(await signPayload(payload), signature);
 }
+
+/**
+ * Signs a license payload with the vendor's asymmetric private key when it is
+ * configured (production), falling back to HMAC for development installs.
+ * Customers only ever hold the public key, so licenses cannot be forged.
+ */
+export async function signLicense(
+  payload: unknown,
+): Promise<{ signature: string; alg: string; keyId: string | null }> {
+  const canonical = canonicalJson(payload);
+  const priv = await ecdsaPrivateKey();
+  if (priv) {
+    const sig = await crypto.subtle.sign(
+      { name: "ECDSA", hash: "SHA-256" },
+      priv,
+      enc.encode(canonical),
+    );
+    return {
+      signature: b64(sig),
+      alg: LICENSE_ALG_ECDSA,
+      keyId: process.env["LICENSE_KEY_ID"] ?? "diramn-license-v1",
+    };
+  }
+  return {
+    signature: await signPayload(payload),
+    alg: LICENSE_ALG_HMAC,
+    keyId: null,
+  };
+}
+
+/** Verifies both the asymmetric (v2) and legacy HMAC (v1) signatures. */
+export async function verifyLicenseSignature(
+  payload: unknown,
+  signature: string,
+  alg?: string | null,
+): Promise<{ valid: boolean; alg: string | null }> {
+  if (!alg || alg === LICENSE_ALG_ECDSA) {
+    const pub = await ecdsaPublicKey();
+    if (pub) {
+      let ok = false;
+      try {
+        ok = await crypto.subtle.verify(
+          { name: "ECDSA", hash: "SHA-256" },
+          pub,
+          fromB64(signature) as unknown as ArrayBuffer,
+          enc.encode(canonicalJson(payload)),
+        );
+      } catch {
+        ok = false;
+      }
+      if (ok) return { valid: true, alg: LICENSE_ALG_ECDSA };
+    }
+  }
+  if (!alg || alg === LICENSE_ALG_HMAC) {
+    if (await verifyPayload(payload, signature))
+      return { valid: true, alg: LICENSE_ALG_HMAC };
+  }
+  return { valid: false, alg: null };
+}
+
 
 export function randomToken(bytes = 24): string {
   const arr = new Uint8Array(bytes);
