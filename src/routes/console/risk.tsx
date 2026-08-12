@@ -67,7 +67,7 @@ function RiskPage() {
       <PageHeader
         title="Risk Scoring"
         description="Weighted risk per user, asset and IP from the last 30 days of alerts and events."
-        action={
+        actions={
           <Button onClick={() => recompute.mutate()} disabled={recompute.isPending}>
             {recompute.isPending ? "Calculating…" : "Recalculate"}
           </Button>

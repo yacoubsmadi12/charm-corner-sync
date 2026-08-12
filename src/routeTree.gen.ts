@@ -24,6 +24,7 @@ import { Route as ConsoleLdapRouteImport } from './routes/console/ldap'
 import { Route as ConsoleLicenseRouteImport } from './routes/console/license'
 import { Route as ConsoleMitreRouteImport } from './routes/console/mitre'
 import { Route as ConsolePoliciesRouteImport } from './routes/console/policies'
+import { Route as ConsoleRiskRouteImport } from './routes/console/risk'
 import { Route as ConsoleRulesRouteImport } from './routes/console/rules'
 import { Route as ConsoleSearchRouteImport } from './routes/console/search'
 import { Route as ConsoleSourcesRouteImport } from './routes/console/sources'
@@ -110,6 +111,11 @@ const ConsolePoliciesRoute = ConsolePoliciesRouteImport.update({
   path: '/policies',
   getParentRoute: () => ConsoleRouteRoute,
 } as any)
+const ConsoleRiskRoute = ConsoleRiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
 const ConsoleRulesRoute = ConsoleRulesRouteImport.update({
   id: '/rules',
   path: '/rules',
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/console/license': typeof ConsoleLicenseRoute
   '/console/mitre': typeof ConsoleMitreRoute
   '/console/policies': typeof ConsolePoliciesRoute
+  '/console/risk': typeof ConsoleRiskRoute
   '/console/rules': typeof ConsoleRulesRoute
   '/console/search': typeof ConsoleSearchRoute
   '/console/sources': typeof ConsoleSourcesRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/console/license': typeof ConsoleLicenseRoute
   '/console/mitre': typeof ConsoleMitreRoute
   '/console/policies': typeof ConsolePoliciesRoute
+  '/console/risk': typeof ConsoleRiskRoute
   '/console/rules': typeof ConsoleRulesRoute
   '/console/search': typeof ConsoleSearchRoute
   '/console/sources': typeof ConsoleSourcesRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/console/license': typeof ConsoleLicenseRoute
   '/console/mitre': typeof ConsoleMitreRoute
   '/console/policies': typeof ConsolePoliciesRoute
+  '/console/risk': typeof ConsoleRiskRoute
   '/console/rules': typeof ConsoleRulesRoute
   '/console/search': typeof ConsoleSearchRoute
   '/console/sources': typeof ConsoleSourcesRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/console/license'
     | '/console/mitre'
     | '/console/policies'
+    | '/console/risk'
     | '/console/rules'
     | '/console/search'
     | '/console/sources'
@@ -283,6 +293,7 @@ export interface FileRouteTypes {
     | '/console/license'
     | '/console/mitre'
     | '/console/policies'
+    | '/console/risk'
     | '/console/rules'
     | '/console/search'
     | '/console/sources'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/console/license'
     | '/console/mitre'
     | '/console/policies'
+    | '/console/risk'
     | '/console/rules'
     | '/console/search'
     | '/console/sources'
@@ -437,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsolePoliciesRouteImport
       parentRoute: typeof ConsoleRouteRoute
     }
+    '/console/risk': {
+      id: '/console/risk'
+      path: '/risk'
+      fullPath: '/console/risk'
+      preLoaderRoute: typeof ConsoleRiskRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
     '/console/rules': {
       id: '/console/rules'
       path: '/rules'
@@ -521,6 +540,7 @@ interface ConsoleRouteRouteChildren {
   ConsoleLicenseRoute: typeof ConsoleLicenseRoute
   ConsoleMitreRoute: typeof ConsoleMitreRoute
   ConsolePoliciesRoute: typeof ConsolePoliciesRoute
+  ConsoleRiskRoute: typeof ConsoleRiskRoute
   ConsoleRulesRoute: typeof ConsoleRulesRoute
   ConsoleSearchRoute: typeof ConsoleSearchRoute
   ConsoleSourcesRoute: typeof ConsoleSourcesRoute
@@ -539,6 +559,7 @@ const ConsoleRouteRouteChildren: ConsoleRouteRouteChildren = {
   ConsoleLicenseRoute: ConsoleLicenseRoute,
   ConsoleMitreRoute: ConsoleMitreRoute,
   ConsolePoliciesRoute: ConsolePoliciesRoute,
+  ConsoleRiskRoute: ConsoleRiskRoute,
   ConsoleRulesRoute: ConsoleRulesRoute,
   ConsoleSearchRoute: ConsoleSearchRoute,
   ConsoleSourcesRoute: ConsoleSourcesRoute,

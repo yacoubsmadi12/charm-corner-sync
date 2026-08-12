@@ -18,6 +18,11 @@ const nav: NavItem[] = [
   { to: "/console/sources", label: "Log Sources", icon: "⇉" },
   { to: "/console/ldap", label: "LDAP / AD", icon: "⌬" },
   { to: "/console/policies", label: "Security Policies", icon: "⚿" },
+  { to: "/console/hunting", label: "Threat Hunting", icon: "◎" },
+  { to: "/console/mitre", label: "MITRE ATT&CK", icon: "⊞" },
+  { to: "/console/risk", label: "Risk Scoring", icon: "▲" },
+  { to: "/console/ai-investigation", label: "AI Investigation", icon: "✧" },
+  { to: "/console/ai-chat", label: "AI Assistant", icon: "✦" },
   { to: "/console/license", label: "License", icon: "⎔" },
 ];
 
