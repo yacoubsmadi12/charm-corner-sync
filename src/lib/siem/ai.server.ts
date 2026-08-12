@@ -215,7 +215,7 @@ export async function runInvestigation(userId: string, alertId: string) {
     details: { alert_id: alertId, model: result.model },
   });
 
-  return { investigation, raw: parsed };
+  return { investigation };
 }
 
 export async function listInvestigations(userId: string) {
@@ -436,5 +436,15 @@ export async function suggestHunts(userId: string, hypothesis: string) {
   });
   await logUsage(orgId, actor.id, "hunt_suggest", result);
   const parsed = extractJson(result.text);
-  return { hunts: Array.isArray(parsed["hunts"]) ? parsed["hunts"] : [] };
+  const hunts = Array.isArray(parsed["hunts"]) ? parsed["hunts"] : [];
+  return { hunts: hunts as HuntSuggestion[] };
 }
+
+export type HuntSuggestion = {
+  name: string;
+  hypothesis: string;
+  technique_id: string | null;
+  filters: { field: string; op: "eq" | "contains"; value: string }[];
+  hours: number;
+  why: string;
+};
