@@ -322,7 +322,7 @@ export async function recomputeRisk(userId: string) {
       : "asset";
     const weight = SEVERITY_WEIGHT[a.severity] ?? 5;
     bump(type, a.entity, weight, `${a.severity} alerts`, a.created_at);
-    if (a.status === "new" || a.status === "investigating")
+    if (a.status === "new" || a.status === "in_progress" || a.status === "acknowledged")
       bump(type, a.entity, 6, "unresolved alerts", a.created_at);
     const entry = acc.get(key(type, a.entity));
     if (entry) entry.alerts += 1;
