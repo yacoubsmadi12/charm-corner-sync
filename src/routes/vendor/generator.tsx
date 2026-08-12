@@ -60,8 +60,14 @@ const ALL_FEATURES = [
   "compliance",
   "ueba",
   "soar",
+  "threat_hunting",
+  "mitre_mapping",
+  "risk_scoring",
   "ai_analytics",
+  "ai_investigation",
+  "ai_chat",
 ];
+
 
 function GeneratorPage() {
   const listOrgs = useServerFn(listOrganizationsFn);
