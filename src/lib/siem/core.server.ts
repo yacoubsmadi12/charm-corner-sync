@@ -332,11 +332,17 @@ export function planDefaults(plan: string) {
         features: [
           "correlation",
           "ai_analytics",
+          "ai_investigation",
+          "ai_chat",
+          "threat_hunting",
+          "mitre_mapping",
+          "risk_scoring",
           "threat_intel",
           "ueba",
           "soar",
           "compliance",
         ],
+
       };
     case "PROFESSIONAL":
       return {
