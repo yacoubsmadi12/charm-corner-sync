@@ -14,6 +14,7 @@ import { Route as ConsoleRouteRouteImport } from './routes/console/route'
 import { Route as RedirectRouteImport } from './routes/redirect'
 import { Route as VendorRouteRouteImport } from './routes/vendor/route'
 import { Route as ConsoleIndexRouteImport } from './routes/console/index'
+import { Route as ConsoleAiChatRouteImport } from './routes/console/ai-chat'
 import { Route as ConsoleAlertsRouteImport } from './routes/console/alerts'
 import { Route as ConsoleIncidentsRouteImport } from './routes/console/incidents'
 import { Route as ConsoleIngestRouteImport } from './routes/console/ingest'
@@ -54,6 +55,11 @@ const VendorRouteRoute = VendorRouteRouteImport.update({
 const ConsoleIndexRoute = ConsoleIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleAiChatRoute = ConsoleAiChatRouteImport.update({
+  id: '/ai-chat',
+  path: '/ai-chat',
   getParentRoute: () => ConsoleRouteRoute,
 } as any)
 const ConsoleAlertsRoute = ConsoleAlertsRouteImport.update({
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/console': typeof ConsoleRouteRouteWithChildren
   '/vendor': typeof VendorRouteRouteWithChildren
   '/redirect': typeof RedirectRoute
+  '/console/ai-chat': typeof ConsoleAiChatRoute
   '/console/alerts': typeof ConsoleAlertsRoute
   '/console/incidents': typeof ConsoleIncidentsRoute
   '/console/ingest': typeof ConsoleIngestRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/redirect': typeof RedirectRoute
+  '/console/ai-chat': typeof ConsoleAiChatRoute
   '/console/alerts': typeof ConsoleAlertsRoute
   '/console/incidents': typeof ConsoleIncidentsRoute
   '/console/ingest': typeof ConsoleIngestRoute
@@ -187,6 +195,7 @@ export interface FileRoutesById {
   '/console': typeof ConsoleRouteRouteWithChildren
   '/vendor': typeof VendorRouteRouteWithChildren
   '/redirect': typeof RedirectRoute
+  '/console/ai-chat': typeof ConsoleAiChatRoute
   '/console/alerts': typeof ConsoleAlertsRoute
   '/console/incidents': typeof ConsoleIncidentsRoute
   '/console/ingest': typeof ConsoleIngestRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/vendor'
     | '/redirect'
+    | '/console/ai-chat'
     | '/console/alerts'
     | '/console/incidents'
     | '/console/ingest'
@@ -233,6 +243,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/redirect'
+    | '/console/ai-chat'
     | '/console/alerts'
     | '/console/incidents'
     | '/console/ingest'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/vendor'
     | '/redirect'
+    | '/console/ai-chat'
     | '/console/alerts'
     | '/console/incidents'
     | '/console/ingest'
@@ -317,6 +329,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/console/'
       preLoaderRoute: typeof ConsoleIndexRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/ai-chat': {
+      id: '/console/ai-chat'
+      path: '/ai-chat'
+      fullPath: '/console/ai-chat'
+      preLoaderRoute: typeof ConsoleAiChatRouteImport
       parentRoute: typeof ConsoleRouteRoute
     }
     '/console/alerts': {
@@ -435,6 +454,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface ConsoleRouteRouteChildren {
+  ConsoleAiChatRoute: typeof ConsoleAiChatRoute
   ConsoleAlertsRoute: typeof ConsoleAlertsRoute
   ConsoleIncidentsRoute: typeof ConsoleIncidentsRoute
   ConsoleIngestRoute: typeof ConsoleIngestRoute
@@ -449,6 +469,7 @@ interface ConsoleRouteRouteChildren {
 }
 
 const ConsoleRouteRouteChildren: ConsoleRouteRouteChildren = {
+  ConsoleAiChatRoute: ConsoleAiChatRoute,
   ConsoleAlertsRoute: ConsoleAlertsRoute,
   ConsoleIncidentsRoute: ConsoleIncidentsRoute,
   ConsoleIngestRoute: ConsoleIngestRoute,
