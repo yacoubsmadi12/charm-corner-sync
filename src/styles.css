@@ -175,3 +175,84 @@
   background-clip: text;
   color: transparent;
 }
+
+/* ── Cyber login effects ─────────────────────────────────────── */
+
+@utility cyber-grid {
+  background-image: linear-gradient(
+      oklch(0.78 0.14 197 / 0.09) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, oklch(0.78 0.14 197 / 0.09) 1px, transparent 1px);
+  background-size: 46px 46px;
+  animation: cyber-grid-pan 22s linear infinite;
+  mask-image: radial-gradient(80% 70% at 50% 40%, black, transparent 85%);
+}
+
+@keyframes cyber-grid-pan {
+  to {
+    background-position: 46px 46px;
+  }
+}
+
+@utility scanline {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    oklch(0.78 0.14 197 / 0.5),
+    transparent
+  );
+  animation: scanline-move 7s linear infinite;
+}
+
+@keyframes scanline-move {
+  0% {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  10%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(1000%);
+    opacity: 0;
+  }
+}
+
+@utility glow-orb {
+  filter: blur(70px);
+  animation: orb-drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes orb-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(6%, -8%, 0) scale(1.15);
+  }
+}
+
+@utility panel-glow {
+  background:
+    linear-gradient(oklch(0.21 0.03 250 / 0.92), oklch(0.18 0.03 250 / 0.92));
+  border: 1px solid oklch(0.78 0.14 197 / 0.25);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glow), var(--shadow-panel);
+  backdrop-filter: blur(14px);
+}
+
+@utility corner-brackets {
+  position: relative;
+}
+
+@utility ticker {
+  animation: ticker-blink 2.4s steps(2, end) infinite;
+}
+
+@keyframes ticker-blink {
+  50% {
+    opacity: 0.25;
+  }
+}

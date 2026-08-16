@@ -66,88 +66,139 @@ function LoginPage() {
   }
 
   return (
-    <div className="grid min-h-screen lg:grid-cols-2">
-      <div className="grid-noise relative hidden flex-col justify-between p-12 lg:flex">
-        <div
-          className="absolute inset-0 -z-10"
-          style={{ background: "var(--gradient-hero)" }}
-        />
-        <div className="flex items-center gap-3">
-          <ShieldMark />
-          <span className="text-lg font-semibold tracking-[0.3em]">DIRAMN</span>
-        </div>
-        <div className="max-w-md space-y-4">
-          <h2 className="text-4xl font-semibold leading-tight">
-            Enterprise <span className="text-gradient">security operations</span>,
-            multi-tenant by design.
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Phase 1 foundation: hardened authentication, role-based access
-            control, directory integration, log source onboarding and signed
-            licensing.
-          </p>
-          <ul className="grid gap-2 text-xs text-muted-foreground">
-            {[
-              "Strict tenant isolation on every record",
-              "Vendor and customer administration separated",
-              "Signed license files decide the plan",
-              "Full audit trail of privileged actions",
-            ].map((f) => (
-              <li key={f} className="flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-primary" />
-                {f}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <p className="font-mono text-[11px] text-muted-foreground">
-          DirAmn SIEM · Phase 1 Foundation
-        </p>
-      </div>
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      {/* ambient background */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-30"
+        style={{ background: "var(--gradient-hero)" }}
+      />
+      <div className="cyber-grid pointer-events-none absolute inset-0 -z-20" />
+      <div className="glow-orb pointer-events-none absolute -left-32 top-1/4 -z-20 size-96 rounded-full bg-primary/25" />
+      <div className="glow-orb pointer-events-none absolute -right-24 bottom-0 -z-20 size-80 rounded-full bg-accent/20" />
+      <div className="scanline pointer-events-none absolute inset-x-0 top-0 -z-10 h-px" />
 
-      <div className="flex items-center justify-center p-6">
-        <form onSubmit={onSubmit} className="panel w-full max-w-sm space-y-5 p-8">
-          <div className="space-y-1">
-            <h1 className="text-xl font-semibold">Sign in</h1>
-            <p className="text-xs text-muted-foreground">
-              Use your DirAmn username or email address.
+      <div className="relative mx-auto grid min-h-screen w-full max-w-6xl items-center gap-10 px-6 py-12 lg:grid-cols-[1.1fr_minmax(0,420px)]">
+        {/* brand / narrative */}
+        <div className="hidden flex-col gap-10 lg:flex">
+          <div className="flex items-center gap-3">
+            <ShieldMark />
+            <div className="leading-tight">
+              <div className="text-lg font-semibold tracking-[0.32em]">
+                DIRAMN
+              </div>
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary">
+                security operations platform
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.25em] text-primary">
+              <span className="ticker size-1.5 rounded-full bg-primary" />
+              secure channel established
+            </div>
+            <h2 className="max-w-xl text-4xl font-semibold leading-[1.15] xl:text-5xl">
+              Detect. Investigate.{" "}
+              <span className="text-gradient">Contain the threat.</span>
+            </h2>
+            <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
+              Multi-tenant SIEM with AI-assisted investigation, MITRE ATT&amp;CK
+              coverage, threat hunting and signed license enforcement.
             </p>
           </div>
 
-          <Field label="Username or email">
-            <Input
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              autoComplete="username"
-              placeholder="admin"
-              required
-            />
-          </Field>
-          <Field label="Password">
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-            />
-          </Field>
+          <div className="grid max-w-xl grid-cols-2 gap-3">
+            {[
+              { k: "AI Investigation", v: "Automated alert triage" },
+              { k: "Threat Hunting", v: "Pivot across telemetry" },
+              { k: "MITRE ATT&CK", v: "Technique coverage map" },
+              { k: "Risk Scoring", v: "Entity-level exposure" },
+            ].map((f) => (
+              <div
+                key={f.k}
+                className="rounded-lg border border-border/70 bg-card/50 p-4 backdrop-blur transition-colors hover:border-primary/40"
+              >
+                <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">
+                  {f.k}
+                </div>
+                <div className="mt-1 text-xs text-muted-foreground">{f.v}</div>
+              </div>
+            ))}
+          </div>
 
-          {error && (
-            <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
-              {error}
-            </p>
-          )}
-
-          <Button type="submit" className="w-full" disabled={busy}>
-            {busy ? "Authenticating…" : "Sign in"}
-          </Button>
-
-          <p className="text-center text-[11px] text-muted-foreground">
-            First run seeds the vendor account{" "}
-            <span className="font-mono text-primary">admin / admin</span>
+          <p className="font-mono text-[11px] text-muted-foreground/70">
+            DirAmn SIEM · encrypted session · all access is audited
           </p>
-        </form>
+        </div>
+
+        {/* auth card */}
+        <div className="flex items-center justify-center">
+          <form
+            onSubmit={onSubmit}
+            className="panel-glow w-full max-w-sm space-y-5 p-8"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3 lg:hidden">
+                <ShieldMark />
+                <span className="text-sm font-semibold tracking-[0.28em]">
+                  DIRAMN
+                </span>
+              </div>
+              <span className="ml-auto font-mono text-[10px] uppercase tracking-[0.22em] text-primary">
+                <span className="ticker">●</span> online
+              </span>
+            </div>
+
+            <div className="space-y-1">
+              <h1 className="text-xl font-semibold tracking-tight">
+                Operator sign in
+              </h1>
+              <p className="font-mono text-[11px] text-muted-foreground">
+                identity verification required
+              </p>
+            </div>
+
+            <Field label="Username or email">
+              <Input
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                autoComplete="username"
+                placeholder="admin"
+                className="font-mono"
+                required
+              />
+            </Field>
+            <Field label="Password">
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                className="font-mono"
+                required
+              />
+            </Field>
+
+            {error && (
+              <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 font-mono text-xs text-destructive">
+                {error}
+              </p>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full font-mono uppercase tracking-[0.18em]"
+              disabled={busy}
+            >
+              {busy ? "authenticating…" : "authenticate"}
+            </Button>
+
+            <div className="border-t border-border/70 pt-4 text-center font-mono text-[10px] leading-relaxed text-muted-foreground">
+              first run seeds vendor account{" "}
+              <span className="text-primary">admin / admin</span>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
