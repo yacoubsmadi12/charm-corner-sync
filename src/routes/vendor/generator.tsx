@@ -164,7 +164,9 @@ function GeneratorPage() {
                 const p = v as keyof typeof PLAN_PRESETS;
                 setPlan(p);
                 setPreset(PLAN_PRESETS[p]);
+                setFeatures(PLAN_FEATURES[p]);
               }}
+
             >
               <SelectTrigger>
                 <SelectValue />
