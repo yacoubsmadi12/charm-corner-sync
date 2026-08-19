@@ -200,6 +200,16 @@ export async function generateLicense(
     .single();
   if (error) throw new Error(error.message);
 
+  // A tenant runs on exactly one license: supersede any previously active one.
+  await supabaseAdmin
+    .from("licenses")
+    .update({ status: "suspended" })
+    .eq("org_id", org.id)
+    .eq("status", "active")
+    .neq("id", license.id);
+
+
+
   if (input.features.length) {
     await supabaseAdmin
       .from("license_features")
@@ -369,6 +379,15 @@ export async function uploadLicense(userId: string, fileContent: string) {
     .select()
     .single();
   if (error) throw new Error(error.message);
+
+  // A tenant runs on exactly one license: supersede any previously active one.
+  await supabaseAdmin
+    .from("licenses")
+    .update({ status: "suspended" })
+    .eq("org_id", orgId)
+    .eq("status", "active")
+    .neq("id", license.id);
+
 
   await supabaseAdmin
     .from("license_features")
