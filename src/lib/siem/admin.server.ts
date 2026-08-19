@@ -380,6 +380,15 @@ export async function uploadLicense(userId: string, fileContent: string) {
     .single();
   if (error) throw new Error(error.message);
 
+  // A tenant runs on exactly one license: supersede any previously active one.
+  await supabaseAdmin
+    .from("licenses")
+    .update({ status: "suspended" })
+    .eq("org_id", orgId)
+    .eq("status", "active")
+    .neq("id", license.id);
+
+
   await supabaseAdmin
     .from("license_features")
     .delete()
