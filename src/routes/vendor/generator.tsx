@@ -68,6 +68,21 @@ const ALL_FEATURES = [
   "ai_chat",
 ];
 
+/** Features pre-selected for each plan (mirrors the server-side plan defaults). */
+const PLAN_FEATURES: Record<keyof typeof PLAN_PRESETS, string[]> = {
+  STARTER: ["correlation"],
+  PROFESSIONAL: [
+    "correlation",
+    "threat_intel",
+    "compliance",
+    "threat_hunting",
+    "mitre_mapping",
+    "risk_scoring",
+  ],
+  ENTERPRISE_AI: ALL_FEATURES,
+};
+
+
 
 function GeneratorPage() {
   const listOrgs = useServerFn(listOrganizationsFn);
@@ -149,7 +164,9 @@ function GeneratorPage() {
                 const p = v as keyof typeof PLAN_PRESETS;
                 setPlan(p);
                 setPreset(PLAN_PRESETS[p]);
+                setFeatures(PLAN_FEATURES[p]);
               }}
+
             >
               <SelectTrigger>
                 <SelectValue />

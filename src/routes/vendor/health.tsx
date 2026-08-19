@@ -27,7 +27,7 @@ const SERVICES = [
   { name: "API Gateway", detail: "TanStack server functions" },
   { name: "PostgreSQL", detail: "Primary tenant datastore" },
   { name: "Authentication", detail: "JWT session issuer" },
-  { name: "License Service", detail: "HMAC-SHA256 signer" },
+  { name: "License Service", detail: "ECDSA P-256 signer" },
   { name: "Audit Pipeline", detail: "Immutable event log" },
 ];
 
